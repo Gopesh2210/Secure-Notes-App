@@ -1,0 +1,31 @@
+.input-full-width{
+    width: 100%;
+}
+.card-bottom-spacing{
+    margin-bottom: 1em;
+}
+.container{
+}
+
+mat-spinner{
+    margin: auto;
+}
+.image-btn-container{
+    margin-bottom : 1em;
+}
+.image-btn{
+    color: white;
+    background-color: #f08011;
+}
+input[type="file"]{
+    visibility: hidden;
+}
+.image-preview{
+    height: 10em;
+    margin: 1em 0;
+    text-align: center;
+}
+
+.image-preview img{
+    height: 100%;
+}

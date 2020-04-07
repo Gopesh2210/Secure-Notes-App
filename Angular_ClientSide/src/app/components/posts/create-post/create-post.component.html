@@ -1,0 +1,27 @@
+<div class="container">
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-card class="card-bottom-spacing">
+<form [formGroup]="createPostForm" (ngSubmit)="savePost()"  *ngIf="!isLoading">
+    <mat-form-field class="input-full-width" >
+        <input matInput  placeholder="Title" formControlName="title">
+        <mat-error *ngIf="createPostForm.get('title').invalid">
+            Please enter a title
+          </mat-error>
+    </mat-form-field>
+    <div class="image-btn-container">
+        <button mat-stroked-button  type="button" class="image-btn" (click)="filePicker.click()">Upload Image</button>
+        <input type="file" #filePicker (change)="onImageUpload($event)">
+    </div>
+    <div class="image-preview"  *ngIf="imagePreview !=='' && imagePreview && createPostForm.get('image').valid">
+        <img [src]="imagePreview" [alt]="createPostForm.value.title">
+    </div>
+    <mat-form-field class="input-full-width">
+        <textarea row="6" matInput  placeholder="Content" formControlName="content"></textarea>
+        <mat-error *ngIf="createPostForm.get('content').invalid">
+            Please enter minimum 4 letter content
+          </mat-error>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!createPostForm.valid">Save</button>
+</form>
+</mat-card>
+</div>
