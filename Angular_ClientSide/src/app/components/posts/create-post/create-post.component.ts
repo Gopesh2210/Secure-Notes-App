@@ -13,7 +13,7 @@ import { mimeType } from '../../../validator/mime-type-validator/mime-type.valid
 export class CreatePostComponent implements OnInit {
 
 
-  private createPostForm: FormGroup;
+  createPostForm: FormGroup;
   private mode = 'create';
   private postId;
   editablePost: Post;

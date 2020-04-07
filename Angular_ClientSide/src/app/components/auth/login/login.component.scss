@@ -1,0 +1,39 @@
+.input-full-width{
+    width: 100%;
+}
+.card-bottom-spacing{
+    margin-bottom: 1em;
+}
+.container{
+    width: 80%;
+    margin:auto;
+}
+.header-container{
+    text-align: center;
+}
+
+.header-style{
+    font-weight: bolder;
+    color:#5e0073;
+    font-family: "Times New Roman", Times, serif;;
+}
+.card-style{
+background-color: #fffaf0;
+}
+
+mat-spinner{
+    margin: auto;
+}
+
+.login-btn{
+    margin-top: 2em;
+    width: 50%;
+    border-radius: 2em;
+}
+.login-btn-container{
+    text-align: center;
+}
+
+:host ::ng-deep .mat-card:not([class*=mat-elevation-z]){
+    box-shadow: 0 10px 10px 3px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 1px 3px 0 rgba(0,0,0,.12);
+}
