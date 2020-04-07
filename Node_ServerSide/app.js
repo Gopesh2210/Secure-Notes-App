@@ -6,6 +6,8 @@ const path = require('path');
 
 const mongoose = require('mongoose');
 const postRoutes = require('./routes/posts');
+const userRoutes = require('./routes/user');
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
@@ -22,5 +24,6 @@ mongoose.connect("mongodb+srv://gopesh:root123@cluster0-acusb.mongodb.net/mymemo
     });
 
 app.use('/api/posts',postRoutes);
+app.use('/api/user',userRoutes);
 
 module.exports = app;
