@@ -1,15 +1,21 @@
 <mat-toolbar color="primary" class="header">
-    <span><a  mat-button class="link-styling header-font-style" routerLink="/">My Notes</a></span>
+    <span ><a  mat-button class="link-styling header-font-style" routerLink="/">My Notes</a></span>
+    <!-- *ngIf = "isAuthenticated" -->
+    <!-- <span  *ngIf = "!isAuthenticated"><a  mat-button class="link-styling header-font-style">Welcome to My Notes</a></span> -->
     <span class="spacer"></span>
+    <span *ngIf = "isAuthenticated"><a  mat-button class="link-styling header-font-style">Welcome, {{userName}}</a></span>
     <ul>
-        <li>
+        <li *ngIf = "isAuthenticated">
             <span><a mat-button class="link-styling" routerLink="/create" routerLinkActive="mat-accent"><img src="../../../assets/plus.png" class="image-size"></a></span>            
         </li>
-        <li>
+        <li  *ngIf = "!isAuthenticated">
             <span><a mat-button class="link-styling" routerLink="/login" routerLinkActive="mat-accent">Login</a></span>
         </li>
-        <li>
+        <li  *ngIf = "!isAuthenticated">
             <span><a mat-button class="link-styling" routerLink="/signup" routerLinkActive="mat-accent">Sign up</a></span>
+        </li>
+        <li  *ngIf = "isAuthenticated">
+            <button mat-button class="link-styling" (click) = "onLogout()">Logout</button>
         </li>
     </ul>
 </mat-toolbar>

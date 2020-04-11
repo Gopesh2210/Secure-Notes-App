@@ -38,7 +38,7 @@ export class CreatePostComponent implements OnInit {
            // handling loader
            this.isLoading = false;
            // setting editable data to the local variable
-           this.editablePost = {id: editableData._id, title: editableData.title, content: editableData.content, imagePath: editableData.imagePath };
+           this.editablePost = {id: editableData._id, title: editableData.title, content: editableData.content, imagePath: editableData.imagePath, creator: editableData.creator };
            // patching the value to the form for editing
            this.createPostForm.patchValue({title:this.editablePost.title,content:this.editablePost.content, image:this.editablePost.imagePath});
          });
