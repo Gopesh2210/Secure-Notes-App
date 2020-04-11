@@ -2,6 +2,8 @@ const express = require('express');
 const Post = require('../models/post');
 const multer = require('multer');
 
+const checkAuth = require('../middleware/check-auth');
+
 const router  = express.Router();
 
 
@@ -33,12 +35,13 @@ const MIME_TYPE_MAP = {
 
 
 // posting data api
-router.post('',multer({ storage: storage }).single("image"), (req, res, next) => {
+router.post('',checkAuth,multer({ storage: storage }).single("image"), (req, res, next) => {
     const url = req.protocol + "://" + req.get("host");
     const post = new Post({
         title: req.body.title,
         content: req.body.content,
-        imagePath: url + "/images/" + req.file.filename
+        imagePath: url + "/images/" + req.file.filename,
+        creator: req.userData.userId
     });
 
     post.save().then((addedPost) => {
@@ -56,13 +59,13 @@ router.post('',multer({ storage: storage }).single("image"), (req, res, next) =>
 });
 
 // fetching data api
-router.get('', (req, res, next) => {
+router.get('',checkAuth, (req, res, next) => {
     const pageSize = +req.query.pageSize;
     const currentPage = +req.query.currentPage;
-    const postQuery = Post.find();
+    const postQuery = Post.find({creator: req.userData.userId});
     let fetchedPosts;
 
-    console.log(req.query);
+    // console.log(req.query);
     
     if(pageSize && currentPage){
         postQuery
@@ -73,7 +76,7 @@ router.get('', (req, res, next) => {
     postQuery
     .then(documents =>{
         fetchedPosts = documents;
-        return Post.count();
+        return postQuery.count();
     })
     .then(count => {    
         res.status(200).json({
@@ -85,17 +88,22 @@ router.get('', (req, res, next) => {
 });
 
 // deleting data api
-router.delete('/:id', (req, res, next) => {
-    Post.deleteOne({ _id: req.params.id }).then((result) => {
-        console.log(result);
-        res.status(200).json({
-            message: 'Post deleted successfully!',
-        });
+router.delete('/:id',checkAuth, (req, res, next) => {
+    Post.deleteOne({ _id: req.params.id,creator: req.userData.userId}).then((result) => {
+        if(result.n > 0){
+            res.status(200).json({
+                message: 'Post deleted successfully!',
+            });
+        } else{
+            res.status(401).json({
+                message: 'Unauthorized User!'
+            });
+        }
     });
 });
 
 // editing  data api
-router.put('/:id',multer({ storage: storage }).single("image"), (req, res, next) => {
+router.put('/:id',checkAuth,multer({ storage: storage }).single("image"), (req, res, next) => {
     let imagePath = req.body.imagePath;
     if(req.file){
         const url = req.protocol + "://" + req.get("host");
@@ -105,13 +113,20 @@ router.put('/:id',multer({ storage: storage }).single("image"), (req, res, next)
         _id: req.body.id,
         title: req.body.title,
         content: req.body.content,
-        imagePath: imagePath
+        imagePath: imagePath,
+        creator: req.userData.userId
     });
-    Post.updateOne({_id: req.params.id},post).then((result) => {
-        console.log(result);
-        res.status(200).json({
-            message: 'Post edited successfully!',
-        });
+    Post.updateOne({_id: req.params.id, creator: req.userData.userId},post).then((result) => {
+        if(result.nModified > 0){
+            res.status(200).json({
+                message: 'Post edited successfully!',
+            });
+        } else{
+            res.status(401).json({
+                message: 'Unauthorized User!'
+            });
+        }
+       
     });
 });
 
