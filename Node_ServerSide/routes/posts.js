@@ -54,6 +54,10 @@ router.post('',checkAuth,multer({ storage: storage }).single("image"), (req, res
                 imagePath: addedPost.imagePath
             }
         });
+    }).catch(error =>{
+        res.status(500).json({
+            message: "Creation of post failed!"
+        })
     });
   
 });
@@ -62,7 +66,9 @@ router.post('',checkAuth,multer({ storage: storage }).single("image"), (req, res
 router.get('',checkAuth, (req, res, next) => {
     const pageSize = +req.query.pageSize;
     const currentPage = +req.query.currentPage;
-    const postQuery = Post.find({creator: req.userData.userId});
+    const creator = req.userData.userId;
+    const postQuery = Post.find({creator: creator});
+
     let fetchedPosts;
 
     // console.log(req.query);
@@ -76,7 +82,7 @@ router.get('',checkAuth, (req, res, next) => {
     postQuery
     .then(documents =>{
         fetchedPosts = documents;
-        return postQuery.count();
+        return Post.count({creator: creator});
     })
     .then(count => {    
         res.status(200).json({
@@ -84,8 +90,12 @@ router.get('',checkAuth, (req, res, next) => {
             posts: fetchedPosts,
             maxPosts: count
         });
+    }).catch(error =>{
+        res.status(500).json({
+            message: "Fetching posts failed!"
+        })
+    })
     });
-});
 
 // deleting data api
 router.delete('/:id',checkAuth, (req, res, next) => {
@@ -99,6 +109,10 @@ router.delete('/:id',checkAuth, (req, res, next) => {
                 message: 'Unauthorized User!'
             });
         }
+    }).catch(error =>{
+        res.status(500).json({
+            message: "Could not delete post!"
+        })
     });
 });
 
@@ -127,7 +141,11 @@ router.put('/:id',checkAuth,multer({ storage: storage }).single("image"), (req, 
             });
         }
        
-    });
+    }).catch(error =>{
+        res.status(500).json({
+            message: "Could not update post!"
+        })
+    })
 });
 
 // returning edit data
@@ -141,6 +159,10 @@ router.get('/:id', (req, res, next) => {
             });
         }
        
+    }).catch(error =>{
+        res.status(500).json({
+            message: "Fetching post failed!"
+        })
     });
 });
 
