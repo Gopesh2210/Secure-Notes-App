@@ -10,12 +10,13 @@ const userRoutes = require('./routes/user');
 
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
-app.use("/images",express.static(path.join("images")));
+app.use("/images", express.static(path.join("images")));
 
 // Connecting to the mongoose db
-mongoose.connect("mongodb+srv://gopesh:root123@cluster0-acusb.mongodb.net/mymemo?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://gopesh:" + process.env.MONGO_ATLAS_PWD +
+    "@cluster0-acusb.mongodb.net/mymemo?retryWrites=true&w=majority")
     .then(() => {
         console.log("Connected to database")
     })
@@ -23,7 +24,7 @@ mongoose.connect("mongodb+srv://gopesh:root123@cluster0-acusb.mongodb.net/mymemo
         console.log("Connection to database failed!")
     });
 
-app.use('/api/posts',postRoutes);
-app.use('/api/user',userRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/user', userRoutes);
 
 module.exports = app;

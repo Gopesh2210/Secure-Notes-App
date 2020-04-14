@@ -1,0 +1,6 @@
+{
+    "env": {
+        "MONGO_ATLAS_PWD": "root123",
+        "JWT_KEY": "this_is_the_secret_line_used_to_generate_the_token"
+    }
+}
