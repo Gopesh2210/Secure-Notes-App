@@ -9,10 +9,10 @@
             <span><a mat-button class="link-styling" routerLink="/create" routerLinkActive="mat-accent"><img src="../../../assets/plus.png" class="image-size"></a></span>            
         </li>
         <li  *ngIf = "!isAuthenticated">
-            <span><a mat-button class="link-styling" routerLink="/login" routerLinkActive="mat-accent">Login</a></span>
+            <span><a mat-button class="link-styling" routerLink="/auth/login" routerLinkActive="mat-accent">Login</a></span>
         </li>
         <li  *ngIf = "!isAuthenticated">
-            <span><a mat-button class="link-styling" routerLink="/signup" routerLinkActive="mat-accent">Sign up</a></span>
+            <span><a mat-button class="link-styling" routerLink="/auth/signup" routerLinkActive="mat-accent">Sign up</a></span>
         </li>
         <li  *ngIf = "isAuthenticated">
             <button mat-button class="link-styling" (click) = "onLogout()">Logout</button>

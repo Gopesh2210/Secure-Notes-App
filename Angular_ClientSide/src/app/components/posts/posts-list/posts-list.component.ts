@@ -29,26 +29,38 @@ export class PostsListComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.postDataService.getPosts(this.postsPerPage,this.currentPage);
     this.userId = this.authService.getUserId();
-    this.postsSubscription = this.postDataService.getPostsUpdateListener()
-    .subscribe((postData: {post : Post[], postCount: number}) => {
-      this.isLoading = false;
-      this.posts = postData.post;
-      this.totalPosts = postData.postCount;
-    });
+    console.log("USER ID:",this.userId);
 
-    this.isAuthenticated = this.authService.getisAuthenticatedStatus();
-    this.authListener =  this.authService.getAuthStatusListener()
-                        .subscribe(authenticationStatus => {
-                            this.isAuthenticated = authenticationStatus;
-                            this.userId = this.authService.getUserId();
-                        });
+    // the IF checks whether or not the user is authenticated before routing to home page
+    if(this.userId){
+      this.postDataService.getPosts(this.postsPerPage,this.currentPage);
+      this.postsSubscription = this.postDataService.getPostsUpdateListener()
+      .subscribe((postData: {post : Post[], postCount: number}) => {
+        this.isLoading = false;
+        this.posts = postData.post;
+        this.totalPosts = postData.postCount;
+      });
+  
+      this.isAuthenticated = this.authService.getisAuthenticatedStatus();
+      this.authListener =  this.authService.getAuthStatusListener()
+                          .subscribe(authenticationStatus => {
+                              this.isAuthenticated = authenticationStatus;
+                              this.userId = this.authService.getUserId();
+                          });
+    }
+    else{
+       this.isLoading = false;
+    }
+
+  
   }
 
   ngOnDestroy(){
-    this.postsSubscription.unsubscribe();
-    this.authListener.unsubscribe();
+    if(this.userId){
+      this.postsSubscription.unsubscribe();
+      this.authListener.unsubscribe();
+    }
   }
 
   onDelete(postId){

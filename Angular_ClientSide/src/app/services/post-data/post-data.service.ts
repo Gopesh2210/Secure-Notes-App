@@ -4,6 +4,9 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment'
+ 
+const BACKEND_URL = environment.apiURL + "/posts/";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +25,7 @@ export class PostDataService {
     const queryParams = `?pageSize=${pageSize}&currentPage=${currentPage}`;
 
     // get posts from backend
-    this.http.get<{ message: string, posts: any, maxPosts: number }>('http://localhost:3000/api/posts' + queryParams)
+    this.http.get<{ message: string, posts: any, maxPosts: number }>(BACKEND_URL + queryParams)
       .pipe(map((postData) => {
         return {
           posts: postData.posts.map(post => {
@@ -63,7 +66,7 @@ export class PostDataService {
 
 
     // adding posts to backend
-    this.http.post<{ message: string, post: Post }>('http://localhost:3000/api/posts', postData)
+    this.http.post<{ message: string, post: Post }>(BACKEND_URL, postData)
       .subscribe((responseData) => {
         this.router.navigate(["/"]);
       });
@@ -72,13 +75,13 @@ export class PostDataService {
 
   // DELETE : deleting posts from the backend
   deletePost(postId) {
-    return this.http.delete('http://localhost:3000/api/posts/' + postId);
+    return this.http.delete(BACKEND_URL + postId);
   }
 
   // EDIT (get) : fetch post for editing
   getEditablePost(id: string) {
     // return {...this.posts.find(p => p.id === id)};
-    return this.http.get<{ _id: string, title: string, content: string, imagePath: string, creator: string }>('http://localhost:3000/api/posts/' + id);
+    return this.http.get<{ _id: string, title: string, content: string, imagePath: string, creator: string }>(BACKEND_URL + id);
   }
 
   // EDIT (put) : edit post on the backend
@@ -97,7 +100,7 @@ export class PostDataService {
       postData = { id: id, title: title, content: content, imagePath: image, creator: null};
     }
 
-    this.http.put('http://localhost:3000/api/posts/' + id, postData)
+    this.http.put(BACKEND_URL + id, postData)
       .subscribe((responseData) => {
         console.log(responseData);
         this.router.navigate(["/"]);

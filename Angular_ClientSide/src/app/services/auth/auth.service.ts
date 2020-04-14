@@ -4,6 +4,10 @@ import { AuthData } from '../../components/auth/data-type/authdata.model'
 import { LoginData } from '../../components/auth/data-type/login.model'
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment'
+
+
+const BACKEND_URL = environment.apiURL + "/user/";
 
 
 @Injectable({
@@ -24,7 +28,7 @@ export class AuthService {
     
     const authData : AuthData = {name: name, email: email, password: password};
   
-    return this.http.post('http://localhost:3000/api/user/signup', authData)
+    return this.http.post(BACKEND_URL + "/signup", authData)
     .subscribe(responseData => {
       this.router.navigate(['/login']);
     }, error => {
@@ -37,7 +41,7 @@ export class AuthService {
 
     const loginData : LoginData = {email: email, password: password};
 
-    this.http.post<{token: string, userName: string, expiresIn: number, userId: string}>('http://localhost:3000/api/user/login', loginData)
+    this.http.post<{token: string, userName: string, expiresIn: number, userId: string}>(BACKEND_URL + "/login", loginData)
     .subscribe(responseData => {
       // storing the token and username in front end from the back end
       const token = responseData.token
@@ -159,7 +163,7 @@ export class AuthService {
       this.userId = null;
       clearTimeout(this.tokenTimer);
       this.clearAuthData();
-      this.router.navigate(['/login']);
+      this.router.navigate(['/']);
     }
 
 }
