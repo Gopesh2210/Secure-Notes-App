@@ -56,7 +56,7 @@ exports.fetchPosts = (req, res, next) => {
     postQuery
     .then(documents =>{
         fetchedPosts = documents;
-        return Post.count({creator: creator});
+        return Post.countDocuments({creator: creator});
     })
     .then(count => {    
         res.status(200).json({
