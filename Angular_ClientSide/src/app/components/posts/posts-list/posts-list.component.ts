@@ -30,7 +30,6 @@ export class PostsListComponent implements OnInit,OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.userId = this.authService.getUserId();
-    console.log("USER ID:",this.userId);
 
     // the IF checks whether or not the user is authenticated before routing to home page
     if(this.userId){

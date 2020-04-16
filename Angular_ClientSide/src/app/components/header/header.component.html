@@ -6,7 +6,7 @@
     <span *ngIf = "isAuthenticated"><a  mat-button class="link-styling header-font-style">Welcome, {{userName}}</a></span>
     <ul>
         <li *ngIf = "isAuthenticated">
-            <span><a mat-button class="link-styling" routerLink="/create" routerLinkActive="mat-accent"><img src="../../../assets/plus.png" class="image-size"></a></span>            
+            <span><a mat-button class="link-styling" routerLink="/create" routerLinkActive="mat-accent"><img src="https://angular-clientside-mynotes.s3.ap-south-1.amazonaws.com/plus.png" class="image-size"></a></span>            
         </li>
         <li  *ngIf = "!isAuthenticated">
             <span><a mat-button class="link-styling" routerLink="/auth/login" routerLinkActive="mat-accent">Login</a></span>
