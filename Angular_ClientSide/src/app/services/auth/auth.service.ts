@@ -5,7 +5,7 @@ import { LoginData } from '../../components/auth/data-type/login.model'
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment'
-
+import * as crypto from 'crypto-js';
 
 const BACKEND_URL = environment.apiURL + "/user/";
 
@@ -24,9 +24,21 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
+  encryptPassword(password){
+    const secretKey = 'mysecretkey';
+    const encryptedPassword = crypto.AES.encrypt(password,secretKey).toString();
+    // console.log("Encrypted Password : ",encryptedPassword);
+
+    return encryptedPassword;
+  }
+
   createUser(name: string, email: string, password:string){
+
+
+    const encryptedPassword = this.encryptPassword(password);
     
-    const authData : AuthData = {name: name, email: email, password: password};
+
+    const authData : AuthData = {name: name, email: email, password: encryptedPassword};
   
     return this.http.post(BACKEND_URL + "/signup", authData)
     .subscribe(responseData => {
@@ -39,7 +51,10 @@ export class AuthService {
 
   userLogin(email: string, password: string){
 
-    const loginData : LoginData = {email: email, password: password};
+
+    const encryptedPassword = this.encryptPassword(password);
+
+    const loginData : LoginData = {email: email, password: encryptedPassword};
 
     this.http.post<{token: string, userName: string, expiresIn: number, userId: string}>(BACKEND_URL + "/login", loginData)
     .subscribe(responseData => {
