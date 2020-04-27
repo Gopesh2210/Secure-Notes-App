@@ -1,17 +1,31 @@
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+var CryptoJS = require("crypto-js");
 
 const User = require('../models/user');
 
+function decryptPassword(encryptedPassword){
+    // Decrypt the password using crypto-js
+    var bytes  = CryptoJS.AES.decrypt(encryptedPassword, 'mysecretkey');
+    var originalPassword = bytes.toString(CryptoJS.enc.Utf8);  
+    // console.log("PASSWORD originally : ",originalPassword);
+
+    return originalPassword;
+}
+
 exports.createUser = (req,res,next)=>{
-    // encypting the passwword using bcryptjs package
-    bcryptjs.hash(req.body.password,10)
+
+    // console.log("On SIGN UP : ",req.body.password);
+    const originalPassword = decryptPassword(req.body.password);
+
+    // hashing the passwword using bcryptjs package
+    bcryptjs.hash(originalPassword,10)
     .then(hash =>{
         const user = new User({
             name : req.body.name,
             email : req.body.email,
             password : hash
-        });
+        })
 
     // saving the user in the database
         user.save()
@@ -40,8 +54,10 @@ exports.userLogin = (req,res,next)=>{
         }
         // setting user to acces in other then block
         fetchedUser = user;
+        // console.log("On LOGIN  : ",req.body.password)
+        const decryptedPassword = decryptPassword(req.body.password);
         // checking user password
-        return bcryptjs.compare(req.body.password, user.password);
+        return bcryptjs.compare(decryptedPassword, fetchedUser.password);
     })
     .then(result => {
 
